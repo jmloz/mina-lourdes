@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Solicitud de corrección - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Solicitud de Corrección de Ticket{% endblock %}
+{% block contenido %}
+{% include "_ticket_datos.html" %}
+{% if editable %}
+<form method="post" class="formulario">
+  <label for="campo">Campo</label>
+  <select id="campo" name="campo">
+    {% for k, e in etiquetas.items() %}<option value="{{ k }}" data-actual="{{ actuales[k] }}" {{ 'selected' if k == campo }}>{{ e }}</option>{% endfor %}
+  </select>
+  <label for="valorActual">Valor actual</label>
+  <input id="valorActual" value="{{ actuales[campo] }}" readonly>
+  <label for="valorNuevo">Nuevo valor</label>
+  <input id="valorNuevo" name="valorNuevo" value="{{ nuevo }}" required>
+  <label for="motivo">Motivo</label>
+  <textarea id="motivo" name="motivo" maxlength="255" rows="3" required>{{ motivo }}</textarea>
+  <button type="submit">Enviar solicitud</button>
+</form>
+{% else %}
+<p>Este ticket no admite correcciones en su estado actual ({{ ticket.estadoTicket }}).</p>
+{% endif %}
+<p class="acciones"><a class="boton secundario" href="{{ url_for('tickets.detalle', numero=ticket.numeroTicket) }}">Volver al ticket</a></p>
+{% endblock %}
+{% block scripts %}
+<script>
+  var campo = document.getElementById("campo");
+  if (campo) campo.addEventListener("change", function () {
+    document.getElementById("valorActual").value = campo.selectedOptions[0].dataset.actual;
+  });
+</script>
+{% endblock %}

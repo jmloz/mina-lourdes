@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Captura de pesaje - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Captura de Pesaje{% endblock %}
+{% block contenido %}
+<div class="dos-columnas">
+  <form method="post" class="formulario">
+    {% set manual = bascula.estadoConexion != 'Conectada' %}
+    <p class="modo {{ 'manual' if manual else 'bascula' }}">{{ 'Modo: Captura manual (báscula desconectada)' if manual else 'Modo: Lectura de báscula' }}</p>
+    <label for="peso">Peso</label>
+    {% if manual %}
+    <div class="con-unidad"><input id="peso" name="peso_manual" value="{{ peso_manual }}" inputmode="decimal" autocomplete="off"> <span>kg</span></div>
+    {% else %}
+    <div class="con-unidad"><input id="peso" value="{{ peso if peso is not none else '' }}" readonly> <span>kg</span></div>
+    {% endif %}
+    <label>Fecha</label><input value="{{ fecha.strftime('%d/%m/%Y') }}" readonly>
+    <label>Hora</label><input value="{{ hora.strftime('%H:%M:%S') }}" readonly>
+    <label>Basculista</label><input value="{{ usuario.nombre }}" readonly>
+    <label>Estado conexión</label>
+    <input value="{{ bascula.estadoConexion }}" readonly class="conexion {{ 'ok' if bascula.estadoConexion == 'Conectada' else 'mal' }}">
+    <div class="acciones">
+      <button type="submit" name="accion" value="leer">Leer peso</button>
+      {% if manual %}
+      <button type="submit" name="accion" value="guardar_manual">Guardar pesaje manual</button>
+      {% else %}
+      <button type="submit" name="accion" value="guardar">Guardar pesaje</button>
+      {% endif %}
+    </div>
+  </form>
+  <div class="panel-lectura">
+    <h3>Lectura actual</h3>
+    <div class="lectura-grande">{{ peso|peso if peso is not none else '0.00' }} kg</div>
+    <form method="post" action="{{ url_for('basculista.conexion') }}">
+      <button type="submit" class="secundario">Alternar conexión de báscula (demo)</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

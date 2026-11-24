@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block titulo %}Ticket {{ ticket.folio }} - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Detalle del Ticket {{ ticket.folio }}{% endblock %}
+{% block contenido %}
+{% include "_ticket_datos.html" %}
+{% block seccion_analisis %}
+<h3>Resultado de análisis</h3>
+{% if ticket.analisis %}
+<dl class="datos-ticket">
+  <dt>No. análisis</dt><dd>{{ ticket.analisis.numeroAnalisis }}</dd>
+  <dt>Fecha</dt><dd>{{ ticket.analisis.fechaAnalisis.strftime('%d/%m/%Y') }}</dd>
+  <dt>Ley</dt><dd>{{ '%.3f'|format(ticket.analisis.resultadoLey) }} %</dd>
+  <dt>Observaciones</dt><dd>{{ ticket.analisis.observaciones or '-' }}</dd>
+</dl>
+{% else %}
+<p>Pendiente</p>
+{% endif %}
+{% endblock %}
+{% block acciones_supervisor %}
+{% if usuario and usuario.rol == 'supervisor' and ticket.estadoTicket in ('Análisis registrado', 'Ticket actualizado') %}
+<div class="acciones">
+  <a class="boton" href="{{ url_for('supervisor.corregir', numero=ticket.numeroTicket) }}">Solicitar corrección</a>
+  <form method="post" action="{{ url_for('supervisor.cerrar', numero=ticket.numeroTicket) }}">
+    <button type="submit" class="secundario">Cerrar ticket</button>
+  </form>
+</div>
+{% endif %}
+{% endblock %}
+<p class="acciones">
+  <a class="boton" href="{{ url_for('tickets.imprimir', numero=ticket.numeroTicket) }}">Imprimir</a>
+  <a class="boton secundario" href="{{ url_for('tickets.consulta') }}">Volver</a>
+</p>
+{% endblock %}

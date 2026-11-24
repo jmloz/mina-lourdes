@@ -1,0 +1,10 @@
+<dl class="datos-ticket">
+  <dt>No. Ticket</dt><dd>{{ ticket.folio }}</dd>
+  <dt>Fecha</dt><dd>{{ ticket.fechaEmision.strftime('%d/%m/%Y') }}</dd>
+  <dt>Peso</dt><dd>{{ ticket.pesaje.peso|peso }} kg</dd>
+  <dt>Lectura</dt><dd>{{ 'Báscula' if ticket.pesaje.lecturaValida else 'Manual' }}</dd>
+  <dt>Basculista</dt><dd>{{ ticket.usuario.nombre }}</dd>
+  <dt>Estado</dt><dd>{{ ticket.estadoTicket }}</dd>
+  <dt>No. análisis</dt><dd>{{ ticket.analisis.numeroAnalisis if ticket.analisis else 'Pendiente' }}</dd>
+  <dt>Resultado de ley %</dt><dd>{{ ticket.analisis.resultadoLey if ticket.analisis else 'Pendiente' }}</dd>
+</dl>

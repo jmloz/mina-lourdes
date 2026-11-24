@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block titulo %}Correcciones y aprobaciones - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Correcciones Pendientes de Aprobación{% endblock %}
+{% block contenido %}
+{% if pendientes %}
+<table>
+  <tr><th>Ticket</th><th>Campo</th><th>Valor anterior → nuevo</th><th>Motivo</th><th>Solicitante</th><th>Fecha</th><th></th></tr>
+  {% for c in pendientes %}
+  <tr><td>{{ c.ticket.folio }}</td><td>{{ etiquetas.get(c.campo, c.campo) }}</td>
+      <td>{% if c.campo == 'peso' %}{{ c.valorAnterior|peso }} kg → {{ c.valorNuevo|peso }} kg{% else %}{{ c.valorAnterior }} → {{ c.valorNuevo }}{% endif %}</td><td>{{ c.motivo }}</td>
+      <td>{{ c.solicitante.nombre }}</td><td>{{ c.fechaSolicitud.strftime('%d/%m/%Y') }}</td>
+      <td><form method="post" class="acciones">
+        <input type="hidden" name="numeroCorreccion" value="{{ c.numeroCorreccion }}">
+        <button type="submit" name="accion" value="aprobar">Aprobar</button>
+        <button type="submit" name="accion" value="rechazar" class="secundario">Rechazar</button>
+      </form></td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No hay correcciones pendientes</p>
+{% endif %}
+{% if resueltas %}
+<h3>Resueltas recientemente</h3>
+<table>
+  <tr><th>Ticket</th><th>Campo</th><th>Valor anterior → nuevo</th><th>Estado</th></tr>
+  {% for c in resueltas %}
+  <tr><td>{{ c.ticket.folio }}</td><td>{{ etiquetas.get(c.campo, c.campo) }}</td>
+      <td>{% if c.campo == 'peso' %}{{ c.valorAnterior|peso }} kg → {{ c.valorNuevo|peso }} kg{% else %}{{ c.valorAnterior }} → {{ c.valorNuevo }}{% endif %}</td><td>{{ c.estadoCorreccion }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block titulo %}Consulta de tickets - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Consulta de Tickets{% endblock %}
+{% block contenido %}
+<form method="get" class="filtros">
+  <label>Desde <input name="desde" placeholder="AAAA-MM-DD" value="{{ filtros.desde }}"></label>
+  <label>Hasta <input name="hasta" placeholder="AAAA-MM-DD" value="{{ filtros.hasta }}"></label>
+  <label>Estado <select name="estado">
+    <option value="">Todos</option>
+    {% for e in estados %}<option value="{{ e }}" {{ 'selected' if filtros.estado == e }}>{{ e }}</option>{% endfor %}
+  </select></label>
+  <label>N.º ticket <input name="numero" size="8" value="{{ filtros.numero }}"></label>
+  <button type="submit">Buscar</button>
+</form>
+{% if error %}<div class="flash error" role="alert">{{ error }}</div>{% endif %}
+{% if tickets %}
+<table>
+  <tr><th>Ticket</th><th>Fecha</th><th>Peso (kg)</th><th>Estado</th><th>Ley %</th><th></th></tr>
+  {% for t in tickets %}
+  <tr><td>{{ t.folio }}</td><td>{{ t.fechaEmision.strftime('%d/%m/%Y') }}</td>
+      <td>{{ t.pesaje.peso|peso }}</td><td>{{ t.estadoTicket }}</td>
+      <td>{{ t.analisis.resultadoLey if t.analisis else 'Pendiente' }}</td>
+      <td><a href="{{ url_for('tickets.detalle', numero=t.numeroTicket) }}">Ver</a> |
+          <a href="{{ url_for('tickets.imprimir', numero=t.numeroTicket) }}">Imprimir</a></td></tr>
+  {% endfor %}
+</table>
+{% elif not error %}
+<p>{{ 'No se encontraron tickets con esos filtros' if filtros.values()|select|list else 'No hay tickets registrados' }}</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Mina Lourdes{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+<body>
+  <header class="barra">
+    <a class="marca" href="{{ url_for('principal.menu') }}">Mina Lourdes</a>
+    {% if usuario %}
+    <span class="sesion">{{ usuario.nombre }} <small>({{ usuario.rol }})</small>
+      <a class="salir" href="{{ url_for('principal.logout') }}">Salir</a></span>
+    {% endif %}
+  </header>
+  <main>
+    {% with mensajes = get_flashed_messages(with_categories=true) %}
+      {% for categoria, mensaje in mensajes %}
+        <div class="flash {{ 'ok' if categoria == 'ok' else 'error' }}" role="alert">{{ mensaje }}</div>
+      {% endfor %}
+    {% endwith %}
+    <section class="ventana">
+      <div class="ventana-titulo">{% block ventana_titulo %}Mina Lourdes{% endblock %}</div>
+      <div class="ventana-cuerpo">
+        {% block contenido %}{% endblock %}
+      </div>
+    </section>
+  </main>
+{% block scripts %}{% endblock %}
+</body>
+</html>

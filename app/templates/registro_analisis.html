@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block titulo %}Registro de análisis - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Registro de Análisis de Laboratorio{% endblock %}
+{% block contenido %}
+{% include "_ticket_datos.html" %}
+{% if ticket.estadoTicket == pendiente %}
+<form method="post" class="formulario">
+  <label for="resultadoLey">Resultado de ley (%)</label>
+  <input id="resultadoLey" name="resultadoLey" value="{{ ley }}" inputmode="decimal" required>
+  <label for="observaciones">Observaciones</label>
+  <textarea id="observaciones" name="observaciones" maxlength="255" rows="3">{{ observaciones }}</textarea>
+  <button type="submit">Guardar análisis</button>
+</form>
+{% else %}
+<p>Este ticket no está pendiente de análisis (estado: {{ ticket.estadoTicket }}).</p>
+{% endif %}
+<p class="acciones"><a class="boton secundario" href="{{ url_for('laboratorio.historial') }}">Volver al historial</a></p>
+{% endblock %}

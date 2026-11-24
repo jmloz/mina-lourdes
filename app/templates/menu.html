@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block titulo %}Menú principal - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Menú principal{% endblock %}
+{% block contenido %}
+<p>Bienvenido, <strong>{{ usuario.nombre }}</strong>. Elija una opción.</p>
+<div class="tarjetas">
+  {% for o in opciones %}
+    {% if o.url %}
+    <a class="tarjeta" href="{{ o.url }}"><h3>{{ o.etiqueta }}</h3><p>{{ o.descripcion }}</p></a>
+    {% else %}
+    <div class="tarjeta"><h3>{{ o.etiqueta }}</h3><p>{{ o.descripcion }}</p></div>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}

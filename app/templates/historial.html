@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}Historial de tickets - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Historial de Últimos Tickets{% endblock %}
+{% block contenido %}
+{% if tickets %}
+<table>
+  <tr><th>Ticket</th><th>Fecha</th><th>Peso (kg)</th><th>Estado</th><th></th></tr>
+  {% for t in tickets %}
+  <tr><td>{{ t.folio }}</td><td>{{ t.fechaEmision.strftime('%d/%m/%Y') }}</td>
+      <td>{{ t.pesaje.peso|peso }}</td><td>{{ t.estadoTicket }}</td>
+      <td><a href="{{ url_for('tickets.detalle', numero=t.numeroTicket) }}">Ver</a>
+        {% if t.estadoTicket == pendiente %} |
+        <a href="{{ url_for('laboratorio.analisis', numero=t.numeroTicket) }}">Registrar análisis</a>{% endif %}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No se encontraron registros</p>
+{% endif %}
+{% endblock %}

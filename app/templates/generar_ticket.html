@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}Generación de ticket - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Generación de Ticket{% endblock %}
+{% block contenido %}
+{% if pesajes %}
+<p>Pesajes registrados sin ticket:</p>
+<table>
+  <tr><th>N.º pesaje</th><th>Fecha</th><th>Hora</th><th>Peso</th><th>Lectura</th><th></th></tr>
+  {% for p in pesajes %}
+  <tr><td>{{ p.idPesaje }}</td><td>{{ p.fechaPesaje.strftime('%d/%m/%Y') }}</td>
+      <td>{{ p.horaPesaje.strftime('%H:%M:%S') }}</td><td>{{ p.peso|peso }} kg</td>
+      <td>{{ 'Báscula' if p.lecturaValida else 'Manual' }}</td>
+      <td><form method="post"><input type="hidden" name="idPesaje" value="{{ p.idPesaje }}">
+        <button type="submit">Generar ticket</button></form></td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No hay pesajes pendientes de ticket.</p>
+{% endif %}
+<p><a class="boton" href="{{ url_for('basculista.captura') }}">Nuevo pesaje</a></p>
+{% endblock %}

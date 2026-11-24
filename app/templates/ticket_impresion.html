@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block titulo %}Ticket {{ ticket.folio }} - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Ticket de Pesaje{% endblock %}
+{% block contenido %}
+{% include "_ticket_datos.html" %}
+<p class="acciones no-imprimir">
+  <a class="boton secundario" href="{{ url_for('tickets.consulta') }}">Cerrar</a>
+  <button type="button" onclick="window.print()">Imprimir</button>
+</p>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block titulo %}Bitácora - Mina Lourdes{% endblock %}
+{% block ventana_titulo %}Bitácora de Cambios{% endblock %}
+{% block contenido %}
+<form method="get" class="filtros">
+  <label>Desde <input name="desde" placeholder="AAAA-MM-DD" value="{{ filtros.desde }}"></label>
+  <label>Hasta <input name="hasta" placeholder="AAAA-MM-DD" value="{{ filtros.hasta }}"></label>
+  <label>Usuario <input name="usuario" size="14" value="{{ filtros.usuario }}"></label>
+  <label>Acción <select name="accion">
+    <option value="">Todas</option>
+    {% for a in acciones %}<option value="{{ a }}" {{ 'selected' if filtros.accion == a }}>{{ a }}</option>{% endfor %}
+  </select></label>
+  <button type="submit">Buscar</button>
+</form>
+{% if error %}<div class="flash error" role="alert">{{ error }}</div>{% endif %}
+{% if registros %}
+<table>
+  <tr><th>Fecha-hora</th><th>Usuario</th><th>Acción</th><th>Detalle</th><th>Ticket</th></tr>
+  {% for r in registros %}
+  <tr><td>{{ r.fechaHoraB.strftime('%d/%m/%Y %H:%M:%S') }}</td><td>{{ r.usuarioResponsable }}</td>
+      <td>{{ r.accion }}</td><td>{{ r.detalleCambio or '—' }}</td>
+      <td>{{ folios.get(r.numeroTicket, '—') if r.numeroTicket else '—' }}</td></tr>
+  {% endfor %}
+</table>
+{% elif not error %}
+<p>No se encontraron registros</p>
+{% endif %}
+{% endblock %}
